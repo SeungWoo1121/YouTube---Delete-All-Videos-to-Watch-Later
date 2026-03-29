@@ -1,0 +1,35 @@
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function removeAllWatchLater() {
+    while (true) {
+        // 메뉴 버튼 찾기 (영상 하나의 ... 버튼)
+        const menuBtn = document.querySelector('ytd-playlist-video-renderer #button');
+
+        if (!menuBtn) {
+            console.log("더 이상 삭제할 영상 없음");
+            break;
+        }
+
+        menuBtn.click();
+        await sleep(500);
+
+        // "삭제" 또는 "Remove from Watch later" 찾기
+        const items = document.querySelectorAll('tp-yt-paper-item');
+        const removeBtn = [...items].find(el =>
+            el.innerText.includes('삭제') ||
+            el.innerText.includes('Remove')
+        );
+
+        if (removeBtn) {
+            removeBtn.click();
+            console.log("삭제 완료");
+        } else {
+            console.log("삭제 버튼 못 찾음");
+            break;
+        }
+
+        await sleep(1000);
+    }
+}
+
+removeAllWatchLater();
